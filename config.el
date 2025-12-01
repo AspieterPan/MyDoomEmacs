@@ -91,6 +91,9 @@
  :map evil-normal-state-map
  "gh" 'evil-first-non-blank ; 映射 gh 到行首第一个非空字符 (等同于 ^)
  "gl" 'evil-end-of-line     ; 映射 gl 到行尾 (等同于 $)
+ :map evil-visual-state-map
+ "gh" 'evil-first-non-blank ; 映射 gh 到行首第一个非空字符 (等同于 ^)
+ "gl" 'evil-end-of-line     ; 映射 gl 到行尾 (等同于 $)
  )
 
 (use-package! rime
@@ -100,3 +103,15 @@
   (setq rime-emacs-module-header-root  "/opt/homebrew/Cellar/emacs-plus@31/31.0.50/include/"))
 
 (setq rime-user-data-dir "~/Library/Rime")
+
+(use-package! org-latex-impatient
+  :defer t
+  :hook (org-mode . org-latex-impatient-mode)
+  :init
+  (setq org-latex-impatient-tex2svg-bin
+        ;; location of tex2svg executable
+        "/opt/homebrew/bin/tex2svg"))
+
+;; (use-package! org-fragtog
+;;   :config
+;;   (add-hook 'org-mode-hook 'org-fragtog-mode))

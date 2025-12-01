@@ -54,3 +54,5 @@
 ;; (unpin! t)
 
 (package! rime :recipe (:host github :repo "DogLooksGood/emacs-rime" :files ("*.el" "Makefile" "lib.c")))
+(package! org-latex-impatient)
+;; (package! org-fragtog  :recipe (:host github :repo "io12/org-fragtog" :files ("*.el" "Makefile" "lib.c")))
