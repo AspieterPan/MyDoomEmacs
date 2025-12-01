@@ -81,7 +81,7 @@
 (setq doom-font (font-spec :family "Maple Mono NF CN" :size 17)
       doom-variable-pitch-font (font-spec :family "LXGW Bright" :size 17))
 
-(setq org-directory "/Volumes/PortableSSD/org/")
+; (setq org-directory "/Volumes/PortableSSD/org/")
 
 (setq display-line-numbers-type 'relative)
 
@@ -95,8 +95,9 @@
 
 (use-package! rime
   :config
-  (setq rime-librime-root "/opt/homebrew/opt/librime/")
+  ; (setq rime-librime-root "/opt/homebrew/opt/librime/")
   (setq default-input-method "rime")
-  (setq rime-emacs-module-header-root  "/opt/homebrew/Cellar/emacs-plus@31/31.0.50/include/"))
+  ; (setq rime-emacs-module-header-root  "/opt/homebrew/Cellar/emacs-plus@31/31.0.50/include/")
+  )
 
-(setq rime-user-data-dir "~/Library/Rime")
+; (setq rime-user-data-dir "~/Library/Rime")
