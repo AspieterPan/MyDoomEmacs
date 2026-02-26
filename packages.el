@@ -54,5 +54,21 @@
 ;; (unpin! t)
 
 (package! rime :recipe (:host github :repo "DogLooksGood/emacs-rime" :files ("*.el" "Makefile" "lib.c")))
-(package! org-latex-impatient)
-;; (package! org-fragtog  :recipe (:host github :repo "io12/org-fragtog" :files ("*.el" "Makefile" "lib.c")))
+(package! org-fragtog)
+
+(package! emt :recipe (:host github :repo "roife/emt" :files ("*.el" "module/*" "module")))
+
+(package! laas)
+
+(unpin! org-roam)
+(package! org-roam-ui)
+
+(package! zotxt)
+
+(package! md-org
+  :recipe (:host codeberg :repo "ZeniesQis/md-org"))
+
+(package! just-mode
+  :recipe (:host github :repo "leon-barrett/just-mode.el"))
+
+(package! evil-pinyin)

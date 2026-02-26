@@ -81,37 +81,171 @@
 (setq doom-font (font-spec :family "Maple Mono NF CN" :size 17)
       doom-variable-pitch-font (font-spec :family "LXGW Bright" :size 17))
 
-(setq org-directory "/Volumes/PortableSSD/org/")
+(setq org-directory "~/org/")
 
 (setq display-line-numbers-type 'relative)
 
 (xterm-mouse-mode 1)
 
 (map!
- :map evil-normal-state-map
- "gh" 'evil-first-non-blank ; 映射 gh 到行首第一个非空字符 (等同于 ^)
- "gl" 'evil-end-of-line     ; 映射 gl 到行尾 (等同于 $)
  :map evil-visual-state-map
- "gh" 'evil-first-non-blank ; 映射 gh 到行首第一个非空字符 (等同于 ^)
- "gl" 'evil-end-of-line     ; 映射 gl 到行尾 (等同于 $)
+ "Y" (lambda () (interactive) (evil-yank (region-beginning) (region-end) nil ?+) (evil-normal-state))
  )
+
+(map!
+ "s-v" 'clipboard-yank)
+
+(setq select-enable-clipboard nil)
+
+(use-package! just-mode)
 
 (use-package! rime
   :config
   (setq rime-librime-root "/opt/homebrew/opt/librime/")
   (setq default-input-method "rime")
-  (setq rime-emacs-module-header-root  "/opt/homebrew/Cellar/emacs-plus@31/31.0.50/include/"))
+  (setq rime-emacs-module-header-root  "/opt/homebrew/Cellar/emacs-plus@30/30.2/include"))
 
 (setq rime-user-data-dir "~/Library/Rime")
 
-(use-package! org-latex-impatient
-  :defer t
-  :hook (org-mode . org-latex-impatient-mode)
-  :init
-  (setq org-latex-impatient-tex2svg-bin
-        ;; location of tex2svg executable
-        "/opt/homebrew/bin/tex2svg"))
+(add-hook 'org-mode-hook 'org-fragtog-mode)
 
-;; (use-package! org-fragtog
-;;   :config
-;;   (add-hook 'org-mode-hook 'org-fragtog-mode))
+(use-package! emt
+  :hook (after-init . emt-mode))
+
+(use-package! laas
+  :hook ((LaTeX-mode . laas-mode) (org-mode . laas-mode))
+  :config ; do whatever here
+  (aas-set-snippets 'laas-mode
+    ;; set condition!
+    :cond #'texmathp ; expand only while in math
+    "supp" "\\supp"
+    "On" "O(n)"
+    "O1" "O(1)"
+    "Olog" "O(\\log n)"
+    "Olon" "O(n \\log n)"
+    ;; bind to functions!
+    "Sum" (lambda () (interactive)
+            (yas-expand-snippet "\\sum_{$1}^{$2} $0"))
+    "Span" (lambda () (interactive)
+             (yas-expand-snippet "\\Span($1)$0"))
+    ;; add accent snippets
+    :cond #'laas-object-on-left-condition
+    "qq" (lambda () (interactive) (laas-wrap-previous-object "sqrt"))))
+
+(use-package! websocket
+  :after org-roam)
+
+(use-package! org-roam-ui
+  :after org-roam ;; or :after org
+  ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+  ;;         a hookable mode anymore, you're advised to pick something yourself
+  ;;         if you don't care about startup time, use
+  ;;  :hook (after-init . org-roam-ui-mode)
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t))
+
+(use-package! md-org)
+
+(use-package! evil-pinyin
+  :init
+  (setq-default evil-pinyin-scheme 'simplified-xiaohe-all)
+  :config
+  (global-evil-pinyin-mode))
+
+(setq reftex-default-bibliography '("~/bib/Papers.bib"))
+(setq org-cite-global-bibliography '("~/bib/Papers.bib"))
+
+(setq +latex-viewers '(skim))
+
+
+(setq org-latex-src-block-backend 'minted)
+
+
+(setq TeX-engine 'xetex)
+(setq citar-bibliography '("~/bib/Papers.bib"))
+(setq citar-library-paths '("/Volumes/PortableSSD/zotero/storage"))
+(setq evil-snipe-scope 'visible)
+(setq ignored-local-variable-values
+      '((ssh-deploy-on-explicit-save . 1)
+        (ssh-deploy-root-remote . "/ssh:user@server:/remote/project/")
+        (ssh-deploy-root-local . "/local/path/to/project/")))
+(setq org-agenda-files
+      '("/Users/xiaobai/org/" "/Users/xiaobai/org/roam/"
+        "/Users/xiaobai/org/roam/projects/"))
+(setq org-cite-csl-styles-dir "/Volumes/PortableSSD/zotero/styles")
+(setq org-export-with-toc nil)
+(setq org-file-apps
+      '((remote . emacs) (auto-mode . emacs) (directory . emacs)
+        ("\\.mm\\'" . default) ("\\.x?html?\\'" . default) ("\\.pdf\\'" . emacs)))
+(setq org-highlight-latex-and-related '(native))
+(setq org-latex-bib-compiler "biber")
+(setq org-latex-classes
+      '(("cusart" "\\documentclass{custom}\12\\usepackage{custom}"
+         ("\\section{%s}" . "\\section*{%s}")
+         ("\\subsection{%s}" . "\\subsection*{%s}")
+         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+         ("\\paragraph{%s}" . "\\paragraph*{%s}")
+         ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+        ("beamer" "\\documentclass[presentation]{beamer}"
+         ("\\section{%s}" . "\\section*{%s}")
+         ("\\subsection{%s}" . "\\subsection*{%s}")
+         ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+        ("article" "\\documentclass[UTF8,11pt,scheme=chinese,fontset=mac]{ctexart}"
+         ("\\section{%s}" . "\\section*{%s}")
+         ("\\subsection{%s}" . "\\subsection*{%s}")
+         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+         ("\\paragraph{%s}" . "\\paragraph*{%s}")
+         ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+        ("report" "\\documentclass[UTF8,11pt,scheme=chinese,fontset=mac]{ctexrep}"
+         ("\\part{%s}" . "\\part*{%s}") ("\\chapter{%s}" . "\\chapter*{%s}")
+         ("\\section{%s}" . "\\section*{%s}")
+         ("\\subsection{%s}" . "\\subsection*{%s}")
+         ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+        ("book" "\\documentclass[UTF8,11pt,scheme=chinese,fontset=mac]{ctexbook}"
+         ("\\part{%s}" . "\\part*{%s}") ("\\chapter{%s}" . "\\chapter*{%s}")
+         ("\\section{%s}" . "\\section*{%s}")
+         ("\\subsection{%s}" . "\\subsection*{%s}")
+         ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+(setq org-latex-compiler "xelatex")
+(setq org-latex-default-packages-alist
+      '(("" "amsmath" t ("lualatex" "xelatex"))
+        ("" "fontspec" nil ("lualatex" "xelatex"))
+        ("AUTO" "inputenc" t ("pdflatex")) ("T1" "fontenc" t ("pdflatex"))
+        ("" "graphicx" t nil) ("" "longtable" nil nil) ("" "wrapfig" nil nil)
+        ("" "rotating" nil nil) ("normalem" "ulem" t nil)
+        ("" "amsmath" t ("pdflatex")) ("" "amssymb" t ("pdflatex"))
+        ("" "capt-of" nil nil) ("" "enumitem" nil nil) ("" "hyperref" nil nil)))
+(setq org-latex-packages-alist
+      '(("" "listings" nil nil) ("" "amssymb" nil nil) ("" "amsfonts" nil nil)
+        ("" "mathtools" nil nil) ("" "booktabs" nil nil) ("" "minted" nil nil)))
+(setq org-latex-hyperref-template
+      "\\hypersetup{\12 pdfauthor={%a},\12 pdftitle={%t},\12 pdfkeywords={%k},\12 pdfsubject={%d},\12 pdfcreator={%c}, \12 pdflang={Chinese},\12 bookmarks=true,\12 bookmarksopen=true,\12 colorlinks=true,\12 linkcolor=black,\12 urlcolor=blue,\12 citecolor=blue,\12 pdfborder={0,0,0}\12}\12")
+(setq org-latex-tables-booktabs t)
+(setq org-log-done 'time)
+(setq org-roam-capture-templates
+      '(("d" "default" plain "%?" :target
+         (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\12")
+         :unnarrowed t)
+        ("p" "project" plain "%?" :target
+         (file+head "projects/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}")
+         :unnarrowed t)))
+(setq org-startup-with-latex-preview nil)
+(setq tex-bibtex-command "biber")
+(setq org-export-headline-levels 5)
+(setq global-auto-revert-mode t)
+(setq corfu-preview-current t)
+(setq org-journal-file-format "%Y-%m-%d.org")
+(setq org-journal-file-type 'weekly)
+(setq preview-image-type 'dvipng)
+
+(setq shell-file-name (executable-find "bash"))
+(setq-default vterm-shell "/opt/homebrew/bin/fish")
+(setq-default explicit-shell-file-name "/opt/homebrew/bin/fish")
+(after! corfu
+  :config
+  (setq corfu-preselect 'first)
+  )
+(setq +corfu-want-tab-prefer-expand-snippets 't)

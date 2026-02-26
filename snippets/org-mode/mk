@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: inline latex
+# uuid:
+# key: mk
+# condition: t
+# --
+\\\($0\\\)
