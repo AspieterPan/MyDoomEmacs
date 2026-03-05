@@ -72,3 +72,7 @@
   :recipe (:host github :repo "leon-barrett/just-mode.el"))
 
 (package! evil-pinyin)
+
+(package! ekg)
+
+(package! org-ql)

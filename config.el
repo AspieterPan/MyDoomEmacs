@@ -107,7 +107,6 @@
 
 (setq rime-user-data-dir "~/Library/Rime")
 
-(add-hook 'org-mode-hook 'org-fragtog-mode)
 
 (use-package! emt
   :hook (after-init . emt-mode))
@@ -154,6 +153,13 @@
   (setq-default evil-pinyin-scheme 'simplified-xiaohe-all)
   :config
   (global-evil-pinyin-mode))
+
+(use-package! ekg)
+
+(use-package! org-ql)
+
+(add-hook 'org-mode-hook 'org-fragtog-mode)
+;; (add-hook 'org-mode-hook '+org-pretty-mode)
 
 (setq reftex-default-bibliography '("~/bib/Papers.bib"))
 (setq org-cite-global-bibliography '("~/bib/Papers.bib"))
@@ -244,8 +250,16 @@
 (setq shell-file-name (executable-find "bash"))
 (setq-default vterm-shell "/opt/homebrew/bin/fish")
 (setq-default explicit-shell-file-name "/opt/homebrew/bin/fish")
-(after! corfu
-  :config
-  (setq corfu-preselect 'first)
-  )
 (setq +corfu-want-tab-prefer-expand-snippets 't)
+(setq lsp-ui-sideline-show-code-actions 't)
+(setq lsp-headerline-breadcrumb-enable 't)
+(setq lsp-ui-sideline-show-hover 't)
+
+(setq gptel-model   'deepseek-ai/DeepSeek-V3.2
+      gptel-backend
+      (gptel-make-openai "SilliconFlow"               ;Any name you want
+        :host "api.siliconflow.cn"
+        :endpoint "/v1/chat/completions"
+        :stream t
+        :key "sk-kninswphnwltcdcybzmleseyhchqppxtxjyqghzfiqgkfmbh"                   ;can be a function that returns the key
+        :models '(deepseek-ai/DeepSeek-V3.2)))
